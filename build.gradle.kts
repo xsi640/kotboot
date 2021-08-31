@@ -1,19 +1,26 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+val ktor_version: String by project
+val kotlin_version: String by project
+val logback_version: String by project
+val exposed_version: String by project
+val postgresql_version: String by project
+val hikaricp_version: String by project
+val koin_version: String by project
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    application
+    kotlin("jvm") version "1.5.30"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.30"
 }
 
 allprojects {
+
     apply {
         plugin("kotlin")
+        plugin("org.gradle.application")
     }
 
-    group = "com.github.xsi640"
+    group = "com.example"
     version = "0.0.1"
-
-    java.sourceCompatibility = JavaVersion.VERSION_1_8
-    java.targetCompatibility = JavaVersion.VERSION_1_8
 
     val user = System.getProperty("repoUser")
     val pwd = System.getProperty("repoPassword")
@@ -26,18 +33,24 @@ allprojects {
                 password = pwd
                 isAllowInsecureProtocol = true
             }
-            url = uri("http://nexus.suyang.home/repository/maven-group/")
+            url = uri("http://172.16.11.231:8081/nexus/repository/maven2-group/")
         }
     }
 
     dependencies {
-        implementation(kotlin("stdlib"))
-    }
+        implementation("io.ktor:ktor-jackson:$ktor_version")
+        implementation("io.ktor:ktor-server-core:$ktor_version")
+        implementation("io.ktor:ktor-server-netty:$ktor_version")
+        implementation("ch.qos.logback:logback-classic:$logback_version")
+        implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+        implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+        implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+        implementation("org.jetbrains.exposed:exposed-jodatime:$exposed_version")
+        implementation("io.insert-koin:koin-core:$koin_version")
+        implementation("org.postgresql:postgresql:$postgresql_version")
+        implementation("com.zaxxer:HikariCP:$hikaricp_version")
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "1.8"
-        }
+        testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+        testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
     }
 }

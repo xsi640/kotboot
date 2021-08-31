@@ -12,3 +12,5 @@ fun defineSubProject(name: String, dir: String = "") {
 }
 
 defineSubProject("core")
+defineSubProject("demo")
+defineSubProject("test")
