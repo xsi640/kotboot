@@ -5,6 +5,10 @@ val exposed_version: String by project
 val postgresql_version: String by project
 val hikaricp_version: String by project
 val koin_version: String by project
+val classgraph_version: String by project
+val commons_io_version: String by project
+val commons_codec_version: String by project
+val commons_lang_version: String by project
 
 plugins {
     application
@@ -49,6 +53,11 @@ allprojects {
         implementation("io.insert-koin:koin-core:$koin_version")
         implementation("org.postgresql:postgresql:$postgresql_version")
         implementation("com.zaxxer:HikariCP:$hikaricp_version")
+        implementation("io.github.classgraph:classgraph:$classgraph_version")
+
+        implementation("commons-io:commons-io:$commons_io_version")
+        implementation("commons-codec:commons-codec:$commons_codec_version")
+        implementation("org.apache.commons:commons-lang3:$commons_lang_version")
 
         testImplementation("io.ktor:ktor-server-tests:$ktor_version")
         testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
