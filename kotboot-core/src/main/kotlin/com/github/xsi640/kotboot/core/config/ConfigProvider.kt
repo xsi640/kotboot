@@ -4,6 +4,8 @@ import com.github.xsi640.kotboot.core.inject.InjectProvider
 import com.typesafe.config.ConfigBeanFactory
 import com.typesafe.config.ConfigFactory
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KProperty
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
@@ -22,15 +24,16 @@ class ConfigProvider : InjectProvider {
         }
     }
 
-    override fun isMatch(kClass: KClass<*>): Boolean {
-        return kClass.hasAnnotation<Config>()
+    override fun isMatch(property: KProperty<*>): Boolean {
+        return property.hasAnnotation<Config>()
     }
 
-    override fun <T : Any> create(objClass: KClass<T>, fieldClass: KClass<T>): T {
-        val config = fieldClass.findAnnotation<Config>()
+    override fun create(objClass: KClass<*>, property: KProperty<*>): Any {
+        val config = property.findAnnotation<Config>()
         val path = config!!.path
         if (path.isNotEmpty()) {
-            return ConfigBeanFactory.create(ApplicationConfig.getConfig(path), fieldClass.java)
+            val type = property.returnType.classifier as KClass<*>
+            return ConfigBeanFactory.create(ApplicationConfig.getConfig(path), type.java)
         }
         throw IllegalArgumentException("The config's path not empty.")
     }

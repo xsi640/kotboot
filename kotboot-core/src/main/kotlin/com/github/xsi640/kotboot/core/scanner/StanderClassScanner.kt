@@ -1,4 +1,4 @@
-package com.github.xsi640.kotboot.core.plugins.scanner
+package com.github.xsi640.kotboot.core.scanner
 
 import io.github.classgraph.ClassGraph
 import kotlin.reflect.KClass

@@ -1,4 +1,4 @@
-package com.github.xsi640.kotboot.core.plugins.routing
+package com.github.xsi640.kotboot.core.routing
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

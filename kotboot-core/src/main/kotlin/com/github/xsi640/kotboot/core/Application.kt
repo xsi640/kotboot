@@ -1,11 +1,12 @@
 package com.github.xsi640.kotboot.core
 
 import com.github.xsi640.kotboot.core.boot.ApplicationContext
+import com.github.xsi640.kotboot.core.config.Config
+import com.github.xsi640.kotboot.core.inject.Autowired
 import com.github.xsi640.kotboot.core.inject.Bean
 //import com.github.xsi640.kotboot.core.plugins.initializeDatabase
 import com.github.xsi640.kotboot.core.plugins.json
 import com.github.xsi640.kotboot.core.plugins.registerRouting
-import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.*
 import io.ktor.features.*
@@ -31,12 +32,51 @@ class Application {
 
 @Bean
 class AAA {
-    val s = "aaa"
+    @Autowired
+    lateinit var serviceA: List<ServiceA>
+
+//    @Autowired
+//    lateinit var serviceB: ServiceB
+
+//    @Config("test")
+//    lateinit var test: String
+}
+
+
+interface ServiceA {
+    fun test()
+}
+
+@Bean
+class ServiceAImpl : ServiceA {
+    override fun test() {
+        println("say a")
+    }
+}@Bean
+class ServiceA2Impl : ServiceA {
+    override fun test() {
+        println("say a2")
+    }
+}
+
+abstract class ServiceB {
+    abstract fun test()
+}
+
+@Bean
+class ServiceBImpl : ServiceB() {
+    override fun test() {
+        println("say b")
+    }
 }
 
 fun main(args: Array<String>) {
     val ctx = ApplicationContext(arrayOf("com.github.xsi640.kotboot"))
     ctx.run()
     val s = ctx.injectorContext.findBean<AAA>(AAA::class)
-    println(s.s)
+    s.serviceA.forEach {
+        println(it.test())
+    }
+//    println(s.serviceB!!.test())
+//    println(s.test)
 }

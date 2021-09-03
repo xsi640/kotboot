@@ -1,8 +1,9 @@
 package com.github.xsi640.kotboot.core.inject
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
 interface InjectProvider {
-    fun isMatch(kClass: KClass<*>): Boolean
-    fun <T : Any> create(objClass: KClass<T>, fieldClass: KClass<T>): T
+    fun isMatch(member: KProperty<*>): Boolean
+    fun create(objClass: KClass<*>, property: KProperty<*>): Any
 }

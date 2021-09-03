@@ -1,8 +1,8 @@
-package com.github.xsi640.kotboot.core.plugins.scanner
+package com.github.xsi640.kotboot.core.scanner
 
 import com.github.xsi640.kotboot.core.inject.Bean
+import com.github.xsi640.kotboot.core.inject.InjectProvider
 import com.github.xsi640.kotboot.core.inject.Named
-import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.findAnnotation
@@ -39,5 +39,6 @@ data class ClassType(
 data class ClassTypeDependence(
     val classType: List<ClassType>,
     val isCollection: Boolean,
-    val member: KMutableProperty<*>
+    val member: KMutableProperty<*>,
+    val injectProvider: InjectProvider? = null
 )

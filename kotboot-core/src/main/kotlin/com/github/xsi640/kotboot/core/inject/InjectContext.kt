@@ -1,6 +1,6 @@
 package com.github.xsi640.kotboot.core.inject
 
-import com.github.xsi640.kotboot.core.plugins.scanner.ClassType
+import com.github.xsi640.kotboot.core.scanner.ClassType
 import kotlin.reflect.KClass
 
 interface InjectContext {

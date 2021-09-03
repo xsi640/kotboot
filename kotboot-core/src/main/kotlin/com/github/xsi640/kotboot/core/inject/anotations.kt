@@ -14,7 +14,7 @@ annotation class Named(
     val name: String = ""
 )
 
-@Target(AnnotationTarget.FIELD)
+@Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 annotation class Autowired

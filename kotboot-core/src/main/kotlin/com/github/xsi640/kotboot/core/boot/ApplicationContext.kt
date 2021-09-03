@@ -1,14 +1,12 @@
 package com.github.xsi640.kotboot.core.boot
 
 import com.github.xsi640.kotboot.core.config.ApplicationConfig
-import com.github.xsi640.kotboot.core.config.Config
 import com.github.xsi640.kotboot.core.extension.logger
 import com.github.xsi640.kotboot.core.inject.*
-import com.github.xsi640.kotboot.core.plugins.routing.RestController
-import com.github.xsi640.kotboot.core.plugins.scanner.ClassType
-import com.github.xsi640.kotboot.core.plugins.scanner.StanderClassScanner
+import com.github.xsi640.kotboot.core.routing.RestController
+import com.github.xsi640.kotboot.core.scanner.ClassType
+import com.github.xsi640.kotboot.core.scanner.StanderClassScanner
 import kotlin.reflect.KClass
-
 
 @Bean(singleton = true)
 class ApplicationContext(val packages: Array<String>) : Boot {
@@ -30,7 +28,6 @@ class ApplicationContext(val packages: Array<String>) : Boot {
             cache
         )
         preloadingClasses[InjectorContext::class] = injectorContext
-        preloadingClasses[Config::class] = ApplicationConfig
         preloadingClasses[ApplicationContext::class] = this
     }
 

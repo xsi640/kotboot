@@ -1,6 +1,6 @@
 package com.github.xsi640.kotboot.core.inject
 
-import com.github.xsi640.kotboot.core.plugins.scanner.ClassType
+import com.github.xsi640.kotboot.core.scanner.ClassType
 import kotlin.reflect.full.primaryConstructor
 
 /**
@@ -11,7 +11,7 @@ interface BeanFactory {
 }
 
 class StandardBeanFactory(
-    val cache: MutableMap<ClassType, Any>
+    private val cache: MutableMap<ClassType, Any>
 ) : BeanFactory {
     override fun <T> createBean(classType: ClassType): T {
         return if (classType.singleton) {
@@ -29,14 +29,24 @@ class StandardBeanFactory(
         val obj = newBean(classType) as T
         if (classType.dependencies.isNotEmpty()) {
             classType.dependencies.forEach { classTypeDependence ->
-                if (classTypeDependence.isCollection) {
-                    val list = mutableListOf<Any>()
-                    classTypeDependence.classType.forEach { ct ->
-                        list.add(newBean(ct))
+                if (classTypeDependence.injectProvider == null) {
+                    if (classTypeDependence.isCollection) {
+                        val list = mutableListOf<Any>()
+                        classTypeDependence.classType.forEach { ct ->
+                            list.add(newBean(ct))
+                        }
+                        classTypeDependence.member.setter.call(obj, list)
+                    } else {
+                        classTypeDependence.member.setter.call(obj, buildBean(classTypeDependence.classType[0]))
                     }
-                    classTypeDependence.member.setter.call(obj, list)
                 } else {
-                    classTypeDependence.member.setter.call(obj, buildBean(classTypeDependence.classType[0]))
+                    classTypeDependence.member.setter.call(
+                        obj,
+                        classTypeDependence.injectProvider.create(
+                            classType.kClass,
+                            classTypeDependence.member
+                        )
+                    )
                 }
             }
         }
