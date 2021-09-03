@@ -7,7 +7,6 @@ import com.github.xsi640.kotboot.core.inject.*
 import com.github.xsi640.kotboot.core.plugins.routing.RestController
 import com.github.xsi640.kotboot.core.plugins.scanner.ClassType
 import com.github.xsi640.kotboot.core.plugins.scanner.StanderClassScanner
-import com.typesafe.config.ConfigFactory
 import kotlin.reflect.KClass
 
 
@@ -58,7 +57,7 @@ class ApplicationContext(val packages: Array<String>) : Boot {
         }
 
         injectorContext.initialize()
-        logger.info("Dependency injection ready.");
+        logger.info("Dependency injection ready.")
 
         val boots: List<Boot> = injectorContext.findBySuperClass(Boot::class)
         boots.sortedBy { it.order }.forEach { boot ->

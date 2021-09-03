@@ -7,7 +7,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
-val ApplicationConfig: com.typesafe.config.Config = ConfigFactory.load().getConfig("kotboot")
+val ApplicationConfig: com.typesafe.config.Config =
+    ConfigFactory.parseResources("application.conf").resolve().getConfig("kotboot")
 
 class ConfigProvider : InjectProvider {
 
