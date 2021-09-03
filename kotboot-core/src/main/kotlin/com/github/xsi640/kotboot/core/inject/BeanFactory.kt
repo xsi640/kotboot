@@ -11,12 +11,12 @@ interface BeanFactory {
 }
 
 class StandardBeanFactory(
-    val injectorContext: InjectorContext
+    val cache: MutableMap<ClassType, Any>
 ) : BeanFactory {
     override fun <T> createBean(classType: ClassType): T {
         return if (classType.singleton) {
-            if (injectorContext.cache.containsKey(classType)) {
-                injectorContext.cache[classType] as T
+            if (cache.containsKey(classType)) {
+                cache[classType] as T
             } else {
                 buildBean(classType)
             }
@@ -44,7 +44,7 @@ class StandardBeanFactory(
     }
 
     private fun <T> newBean(classType: ClassType): T {
-        return injectorContext.cache.computeIfAbsent(classType) {
+        return cache.computeIfAbsent(classType) {
             val constructor = classType.kClass.primaryConstructor
             if (constructor != null && constructor.parameters.isEmpty()) {
                 constructor.call()

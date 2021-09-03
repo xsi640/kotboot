@@ -1,10 +1,13 @@
 package com.github.xsi640.kotboot.core.boot
 
 import com.github.xsi640.kotboot.core.config.ApplicationConfig
+import com.github.xsi640.kotboot.core.config.Config
 import com.github.xsi640.kotboot.core.extension.logger
 import com.github.xsi640.kotboot.core.inject.*
 import com.github.xsi640.kotboot.core.plugins.routing.RestController
+import com.github.xsi640.kotboot.core.plugins.scanner.ClassType
 import com.github.xsi640.kotboot.core.plugins.scanner.StanderClassScanner
+import com.typesafe.config.ConfigFactory
 import kotlin.reflect.KClass
 
 
@@ -16,9 +19,20 @@ class ApplicationContext(val packages: Array<String>) : Boot {
 
     init {
         showBanner()
+        val cache: MutableMap<ClassType, Any> = mutableMapOf()
         val classScanner = StanderClassScanner()
-        injectorContext = InjectorContextImpl()
-        val beanFactory = StandardBeanFactory(injectorContext)
+        val beanFactory = StandardBeanFactory(cache)
+        val dependenciesProcessor = StandardDependenciesProcessor()
+        injectorContext = InjectorContextImpl(
+            packages,
+            classScanner,
+            dependenciesProcessor,
+            beanFactory,
+            cache
+        )
+        preloadingClasses[InjectorContext::class] = injectorContext
+        preloadingClasses[Config::class] = ApplicationConfig
+        preloadingClasses[ApplicationContext::class] = this
     }
 
     private fun showBanner() {
